@@ -4,6 +4,9 @@ const time = document.getElementById('time'),
     name = document.getElementById('name'),
     focus = document.getElementById('focus');
 
+//Options
+const showAmPm = true
+
 //Show Time
 function showTime() {
     let today = new Date(),
@@ -18,8 +21,8 @@ function showTime() {
     hour = hour % 12 || 12;
 
     // Output Time
-    time.innerHTML = `${hour}<span>:</span>${addZeros(min)}<span>:</span>${addZeros(sec)}`;
-
+    time.innerHTML = `${hour}<span>:</span>${addZeros(min)}<span>:</span>${addZeros(sec)} ${showAmPm ? amPm : ''}`;
+    
     setTimeout(showTime, 1000);
 }
 
@@ -37,6 +40,7 @@ function setBgGreet() {
         // Morning
         document.body.style.backgroundImage = "url('../img/morning.jpg')";
         greeting.textContent = 'Good Morning';
+        document.body.style.color = 'white';
     } else if(hour < 18) {
         //Afternoon
         document.body.style.backgroundImage = "url('../img/afternoon.jpg')";
@@ -45,6 +49,7 @@ function setBgGreet() {
         //Evening
         document.body.style.backgroundImage = "url('../img/evening.jpg')";
         greeting.textContent = 'Good Evening';
+        document.body.style.color = 'white';
     }
 }
 
@@ -79,8 +84,23 @@ function getFocus() {
     }
 }
 
+// Set Focus
+function setFocus(e) {
+    if(e.type === 'keypress') {
+        // Make sure enter is pressed
+        if(e.which == 13 || e.keyCode == 13) {
+            localStorage.setItem('focus', e.target.innerText);
+            focus.blur();
+        }
+    } else {
+        localStorage.setItem('focus', e.target.innerText);
+    }
+}
+
 name.addEventListener('keypress', setName);
 name.addEventListener('blur', setName)
+focus.addEventListener('keypress', setFocus);
+focus.addEventListener('blur', setFocus)
 
 // Run
 showTime();
